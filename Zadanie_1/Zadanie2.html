@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="index_2.css">
+<title>CS424, Lab 2, Exercise 2</title>
+
+</head>
+<body onload="init()"> 
+
+<h2>Lab 2, Exercise 2: Mousing</h2>
+
+<noscript>
+   
+<p>JavaScript is required to use this page.</p>
+</noscript>
+
+<p><b>Color:</b>
+    <select id="colorChoice">
+        <option value="0" selected="selected">Random</option>
+        <option value="1">Red</option>
+        <option value="2">Green</option>
+        <option value="3">Blue</option>
+        <option value="4">Yellow</option> 
+        <option value="5">Pink</option>
+    </select>
+    
+
+<b>Shape</b>
+<select id="shapeChoice">
+    <option value="0" selected="selected">Kwadrat</option>
+    <option value="1">Siedmiokąt</option>
+</select>
+<button onclick="clearCanvas()">Clear</button> 
+<div id="canvasholder">
+<canvas id="canvas" width="800" height="600">
+   </canvas> <!-- zamknięcie tagu canvas -->
+</div>
+
+<script>
+    "use strict";  
+    var canvas;    
+    var graphics;  
+    
+   
+    function randomColorString() {
+        var r = Math.floor(256*Math.random());
+        var g = Math.floor(256*Math.random());
+        var b = Math.floor(256*Math.random());
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+        
+   
+    function installMouseHandler() {
+
+        var dragging = false;  
+        var startX, startY;    
+        var prevX, prevY;     
+        var colorChoice;  
+        var shapeChoice;
+        
+        function doMouseDown(evt) {
+            if (dragging) {
+                return;  
+            }
+            if (evt.button != 0) {
+                return;  
+            }
+            var x,y;  
+            var r = canvas.getBoundingClientRect();
+            x = Math.round(evt.clientX - r.left);  
+            y = Math.round(evt.clientY - r.top);  
+            dragging = true;  
+            if (dragging) {
+                startX = prevX = x;
+                startY = prevY = y;
+                document.addEventListener("mousemove", doMouseMove, false);
+                document.addEventListener("mouseup", doMouseUp, false);
+            }
+            colorChoice = Number(document.getElementById("colorChoice").value);
+            shapeChoice = Number(document.getElementById("shapeChoice").value);
+        }
+        
+        function doMouseMove(evt) {
+            if (!dragging) {
+                return;  
+            }
+            if (shapeChoice == 0) {
+                var x,y;  
+                var r = canvas.getBoundingClientRect();
+                x = Math.round(evt.clientX - r.left);  
+                y = Math.round(evt.clientY - r.top);
+
+                if ( Math.abs(x-prevX) + Math.abs(y-prevY) < 3 ) {
+                    return;  
+                }
+
+                graphics.beginPath();
+                graphics.fillRect(x-20,y-20,40,40);
+                graphics.strokeRect(x-20,y-20,40,40);
+                if (colorChoice == 0) {
+                graphics.strokeStyle = "black"; // Kontur czarny
+                graphics.fillStyle = randomColorString(); // Wypełnienie losowym kolorem
+            }
+            else if (colorChoice == 1) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "red";
+            }
+            else if (colorChoice == 2) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "green";
+            }
+            else if (colorChoice == 3) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "blue";
+            }
+            else if (colorChoice == 4) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "yellow";
+            }
+            else if (colorChoice == 5) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "pink";
+            }
+            graphics.lineWidth = 2; 
+            graphics.fill();
+            graphics.stroke();
+            } else if (shapeChoice == 1) {
+                var x,y;  
+                var r = canvas.getBoundingClientRect();
+                x = Math.round(evt.clientX - r.left);  
+                y = Math.round(evt.clientY - r.top);
+
+                if ( Math.abs(x-prevX) + Math.abs(y-prevY) < 3 ) {
+                    return;  
+                }
+
+                graphics.beginPath();
+                graphics.moveTo(x, y - 20);
+                for (var i = 0; i < 7; i++) {
+                    var angle = i * Math.PI * 2 / 7;
+                    var newX = x + 20 * Math.sin(angle);
+                    var newY = y - 20 * Math.cos(angle);
+                    graphics.lineTo(newX, newY);
+                }
+                graphics.closePath();
+                if (colorChoice == 0) {
+                graphics.strokeStyle = "black"; // Kontur czarny
+                graphics.fillStyle = randomColorString(); // Wypełnienie losowym kolorem
+            }
+            else if (colorChoice == 1) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "red";
+            }
+            else if (colorChoice == 2) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "green";
+            }
+            else if (colorChoice == 3) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "blue";
+            }
+            else if (colorChoice == 4) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "yellow";
+            }
+            else if (colorChoice == 5) {
+                graphics.strokeStyle = "black";
+                graphics.fillStyle = "pink";
+            }
+            graphics.lineWidth = 2; 
+            graphics.fill();
+            graphics.stroke();
+            }
+
+            prevX = x;
+            prevY = y;
+        }
+        
+        function doMouseUp(evt) {
+            if (!dragging) {
+                return;  
+            }
+            dragging = false;
+            document.removeEventListener("mousemove", doMouseMove, false);
+            document.removeEventListener("mouseup", doMouseUp, false);
+        }
+        
+        canvas.addEventListener("mousedown", doMouseDown, false);
+
+    } 
+    function addGraphicsContextExtras(graphics) {
+        graphics.strokeLine = function(x1,y1,x2,y2) {
+           this.beginPath();
+           this.moveTo(x1,y1);
+           this.lineTo(x2,y2);
+           this.stroke();
+        }
+
+        graphics.strokeNanogon = function(x,y,radius)
+        {
+            this.beginPath();
+            this.moveTo(x,y-radius);
+            for(var i=0;i<11;i++)
+            {
+                var angle = i* Math.PI * 2/11;
+                var newX = x + radius * Math.sin(angle);
+                var newY = y- radius * Math.cos(angle);
+                this.lineTo(newX,newY);
+            }
+            this.closePath();
+            this.stroke();
+        }
+    }
+    
+    function clearCanvas() {
+        graphics.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    
+   
+    function init() {
+        try {
+            canvas = document.getElementById("canvas");
+            graphics = canvas.getContext("2d");
+        } catch(e) {
+            document.getElementById("canvasholder").innerHTML =
+               "<p>Canvas graphics is not supported.<br>" +
+               "An error occurred while initializing graphics.</p>";
+               return;
+        }
+        installMouseHandler();
+        graphics.fillStyle = "white";
+        graphics.fillRect(0,0,canvas.width,canvas.height);
+    }
+</script>
+
+</body>
+</html>
