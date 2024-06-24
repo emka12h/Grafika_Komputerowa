@@ -57,10 +57,10 @@ var pyramidVertices = createPyramid(); // Przechowuje wierzchołki piramidy
 function uvPyramid(height, side, slices) {
     height = height || 5.0; 
     side = side || 5.0; 
-    slices = slices || 13; // Set slices to 13 for a 13-sided base
+    slices = slices || 7; // Set slices to 7 for a 7-sided base
 
-    var vertexCount = slices + 2; // 13 base vertices + apex + center base vertex
-    var triangleCount = slices * 2; // 13 triangles for sides + 13 triangles for base
+    var vertexCount = slices + 2; // 7 base vertices + apex + center base vertex
+    var triangleCount = slices * 2; // 7 triangles for sides + 7 triangles for base
 
     var vertices = new Float32Array(vertexCount * 3);
     var normals = new Float32Array(vertexCount * 3);
